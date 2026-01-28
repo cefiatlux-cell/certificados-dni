@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Consulta de Certificados</title>
+</head>
+<body>
+
+<h2>Consulta de certificados</h2>
+
+<p>Ingrese su número de DNI:</p>
+
+<input type="text" id="dni" placeholder="DNI">
+<button onclick="buscar()">Buscar</button>
+
+<div id="resultado" style="margin-top:20px;"></div>
+
+<script>
+function buscar() {
+  let dni = document.getElementById("dni").value;
+
+  document.getElementById("resultado").innerHTML = "Buscando...";
+
+  fetch("https://script.google.com/macros/s/AKfycbzhJiQbWAH1WjJyNoDSNb-FwcMzAKRZdVfqPU70gvQSwaBSXPKikk3qHdZNqLUHvp4DKQ/exec?dni=" + dni)
+    .then(response => response.json())
+    .then(data => {
+      if (data.length === 0) {
+        document.getElementById("resultado").innerHTML =
+          "No se encontraron certificados.";
+        return;
+      }
+
+      let html = "";
+      data.forEach(c => {
+        html += `<p>${c.tipo}: 
+          <a href="${c.link}" target="_blank">Ver certificado</a>
+        </p>`;
+      });
+
+      document.getElementById("resultado").innerHTML = html;
+    })
+    .catch(() => {
+      document.getElementById("resultado").innerHTML =
+        "Error al consultar el DNI.";
+    });
+}
+</script>
+
+</body>
+</html>
